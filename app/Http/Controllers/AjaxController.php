@@ -781,6 +781,7 @@ class AjaxController extends Controller
 
 
     public function AddContentOnlineIngroup(Request $request){
+        dd('Working');
         $group_id = $request->group_id;
         $post = new SocialPosts;
         $post->group_id = $group_id;
@@ -990,6 +991,7 @@ class AjaxController extends Controller
         $post->image = $image;
         $post->hash = serialize($hash);
         $post->save();
+        return $post;
     }
 
 
