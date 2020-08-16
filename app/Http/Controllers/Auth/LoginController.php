@@ -37,7 +37,7 @@ class LoginController extends Controller
 
         $input = $request->input();
         $validator = Validator::make($input,[
-                'email' => 'required|email|exists:users,email',
+                'email' => 'required|email',
                 'password' => 'required',
             ]
         );
@@ -49,6 +49,7 @@ class LoginController extends Controller
 
             $credentials = $request->only('email', 'password');
             $remember = isset($request->remember) ? true : false;
+
             if (Auth::attempt($credentials, $remember)) {
                 return redirect()->route('home');
             } else {

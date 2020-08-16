@@ -47,6 +47,7 @@ class HomeController extends Controller
 
         $campaign_cookie = \Cookie::get('campaign');
         $campaign_email = \Cookie::get('campaign_email');
+
         if (!Auth::check() && $campaign_cookie && $campaign_email) {
             $campaign_user = User::where('email', $campaign_email)->first();
             if (!$campaign_user && $request->code != null) {
