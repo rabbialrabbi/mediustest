@@ -486,14 +486,15 @@ Route::get('/data',function (){
 
     if(!is_null($key)){
 
-        $data = SocialPosts::with('group','group.user','group.user.socialaccounts')
+        $data['info'] = SocialPosts::with('group','group.user','group.user.socialaccounts')
             ->where('text', 'like', '%'.$key.'%')
             ->paginate(20);
 
     }else{
 
-        $data = SocialPosts::with('group','group.user','group.user.socialaccounts')->paginate(20);
+        $data['info'] = SocialPosts::with('group','group.user','group.user.socialaccounts')->paginate(20);
     }
+    $data['gname'] = DB::table('social_post_groups')->select('type')->groupBy('type')->get();
 
     return $data;
 });

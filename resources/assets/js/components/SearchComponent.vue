@@ -7,8 +7,11 @@
                 <div class="header-search">
                     <div class="row">
                         <div class="col-3"><input type="text" name="search" placeholder="Search" v-model="searchKey" @keyup="firstLoad()"></div>
-                        <div class="col-3"><input type="text" name="search"></div>
-                        <div class="col-3"><input type="text" name="search"></div>
+                        <Datepicker placeholder="Select Date" :input-class="inputDesign" @selected="firstLoad" v-model="state.data" tag="input"></Datepicker>
+                        <div class="col-3"><select name="" id="">
+                            <option value="">All Group</option>
+                            <option v-for="g in groupData" value="">{{g.type}}</option>
+                        </select></div>
                     </div>
                 </div>
                 <div class="content">
@@ -32,41 +35,30 @@
                         </tr>
                         </tbody>
                     </table>
+
+                    <pagination :data="tableContent" :limit=20 show-disabled=true @pagination-change-page="firstLoad">
+                        <span slot="prev-nav">&lt; Previous</span>
+                        <span slot="next-nav">Next &gt;</span>
+                    </pagination>
                 </div>
-                <nav aria-label="Page navigation example justify-content-center">
-                    <ul class="pagination">
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                                <span class="sr-only">Previous</span>
-                            </a>
-                        </li>
-                        <li v-for="n in tableContent.last_page">
-                            <a class="page-link" @click="firstLoad(n)">{{n}}</a>
-                        </li>
-                        <li class="page-item"><a class="page-link" @click="firstLoad(1)">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                                <span class="sr-only">Next</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import Datepicker from 'vuejs-datepicker';
     export default {
         name: "SearchComponent",
         data(){
             return {
                 tableContent:{},
+                groupData:'',
                 searchKey:'',
+                state:{
+                    data:''
+                },
+                inputDesign:'datepic'
             }
         },
         methods: {
@@ -77,7 +69,9 @@
                         page:p
                     }
                 }).then((response)=>{
-                    this.tableContent = response.data
+                    this.tableContent = response.data.info
+                    this.groupData = response.data.gname
+
 
                 })
             }
@@ -85,6 +79,9 @@
         },
         created() {
             this.firstLoad()
+        },
+        components:{
+            Datepicker
         }
     }
 </script>
@@ -98,7 +95,7 @@
     }
     &-search{
         padding: 30px;
-        input{
+        input,select{
             width: 250px;
             border: none;
             border-bottom: 1px solid darkgray;
@@ -109,7 +106,10 @@
             outline: none;
         }
     }
-
+    select{
+        transform: translateY(10%);
+        margin-left: 60px;
+    }
 
 }
 </style>

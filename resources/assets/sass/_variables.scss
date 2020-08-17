@@ -36,3 +36,11 @@ $input-color-placeholder: lighten($text-color, 30%);
 
 // Panels
 $panel-default-heading-bg: #fff;
+
+.datepic{
+  width: 250px;
+  border: none;
+  border-bottom: 1px solid darkgray;
+  padding: 10px;
+  outline: none;
+}

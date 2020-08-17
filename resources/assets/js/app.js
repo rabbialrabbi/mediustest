@@ -26,6 +26,7 @@ const router = new VueRouter({
 
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
+Vue.component('pagination', require('laravel-vue-pagination'));
 
 const app = new Vue({
     el: '#app',
