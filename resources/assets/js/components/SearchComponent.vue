@@ -6,41 +6,16 @@
                 <hr>
                 <div class="header-search">
                     <div class="row">
-                        <div class="col-3"><input type="text" name="search" placeholder="Search" v-model="searchKey" @keyup="firstLoad()"></div>
-                        <Datepicker placeholder="Select Date" :input-class="inputDesign" @selected="firstLoad" v-model="state.data" tag="input"></Datepicker>
-                        <div class="col-3"><select name="" id="">
+                        <div class="col-3"><input type="text" name="search" placeholder="Search" v-model="searchKey" @keyup="routerLoad()"></div>
+                        <Datepicker placeholder="Select Date" :input-class="inputDesign" @selected="dateSearch()" v-model="searchDate" tag="input"></Datepicker>
+                        <div class="col-3">
+                        <select @change="groupSearch(groupName)" v-model="groupName">
                             <option value="">All Group</option>
-                            <option v-for="g in groupData" value="">{{g.type}}</option>
+                            <option  v-for="g in groupData" :value="g.type" >{{g.type}}</option>
                         </select></div>
                     </div>
                 </div>
-                <div class="content">
-                    <table class="table table-bordered" >
-                        <thead>
-                        <tr style="background-color: #dee2e6">
-                            <th>Group Name</th>
-                            <th>Group Type</th>
-                            <th>Account Name</th>
-                            <th>Post Test</th>
-                            <th>Time</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr v-for="content in tableContent.data">
-                            <td >{{content.group.name}}</td>
-                            <td >{{content.group.type}}</td>
-                            <td class="text-center"><img :src="content.group.user.socialaccounts[0].avatar" :alt="content.group.name" height="40px" width="40px" style="border-radius: 50%"></td>
-                            <td style="width: 400px">{{content.text}}</td>
-                            <td>{{content.created_at}}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                    <pagination :data="tableContent" :limit=20 show-disabled=true @pagination-change-page="firstLoad">
-                        <span slot="prev-nav">&lt; Previous</span>
-                        <span slot="next-nav">Next &gt;</span>
-                    </pagination>
-                </div>
+                <router-view></router-view>
             </div>
         </div>
     </div>
@@ -48,13 +23,16 @@
 
 <script>
     import Datepicker from 'vuejs-datepicker';
+    import TableComponent from "./search/TableComponent";
     export default {
         name: "SearchComponent",
         data(){
             return {
                 tableContent:{},
                 groupData:'',
+                groupName:'',
                 searchKey:'',
+                searchDate:'',
                 state:{
                     data:''
                 },
@@ -74,6 +52,15 @@
 
 
                 })
+            },
+            routerLoad(){
+                this.$router.push({path:'/history',query:{search:this.searchKey}})
+            },
+            groupSearch(data){
+                this.$router.push({path:'/history',query:{groupName:this.data}})
+            },
+            dateSearch(){
+                this.$router.push({path:'/history',query:{searchDate:this.searchDate}})
             }
 
         },
@@ -81,7 +68,8 @@
             this.firstLoad()
         },
         components:{
-            Datepicker
+            Datepicker,
+            TableComponent
         }
     }
 </script>
