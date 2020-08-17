@@ -460,65 +460,15 @@ Route::get('/sendPostTest', 'CronController@sendPostTest');
 
 Route::get('/app/bulk.ly/free/{code}','Auth\RegisterController@validUserRegistrationForm')->name('bulk.free-signup');
 Route::post('/app/bulk.ly/free/signUp/{code}','Auth\RegisterController@validUserRegistration');
-//Route::get('/{vue_capture?}', function () {
-//    return view('home');
-//})->where('vue_capture', '[\/\w\.-]*');
+
+
+/**************************
+ *        History
+ *************************/
 Route::get('/history/{vue_capture?}','PagesController@history')->where('vue_capture', '[\/\w\.-]*');
 Route::get('/data',function (){
 
-//    if(request()->search){
-//        $key = request()->search ;
-//    }else{
-//        $key = '';
-//    }
-//    if(request()->date){
-//        $date = request()->date ;
-//    }else{
-//        $date = '' ;
-//    }
-//    if(request()->group){
-//        $group = request()->group ;
-//    }else{
-//        $group = '' ;
-//    }
     $key= request()->input();
-//    $key = request()->search ;
-//    $date = request()->date ;
-//    $group = request()->group ;
-////
-//    function getFilterData($key){
-//        $data = SocialPosts::with(['group'=>function($query)use($key){
-//            $query->where('type', '=', $key);
-//        },'group.user'])->get()
-//            ->filter(function ($data){
-//            return $data->group;
-//        })->pagination(20);
-//        return $data;
-//    }
-
-
-//    $filter =[];
-//    foreach ($data as $d){
-//        if($d->group){
-//             $filter[] =  (object)['name'=>$d->group->name , 'type'=>$d->group->type];
-//        }
-//    }
-
-//    $next = collect($filter);
-//    dd($next->paginate(20));
-//    if (!is_null($key['date'])){
-////
-//        $data['info'] = DB::table('social_posts')->whereRaw('date(created_at) = ?', [Carbon::parse($key['date'])->format('Y-m-d')])->get();
-//        dd($data);
-//    }
-//    or @!is_null($key['date']) or @!is_null($key['group'])
-//    if(@!is_null($key['date'])){
-//        $data['info']->whereRaw('date(created_at) = ?', [Carbon::parse($key['date'])->format('Y-m-d')])
-//            ->paginate(20);
-//    }else{
-//        $data['info']->whereRaw('date(created_at) = ?', [Carbon::parse($key['date'])->format('Y-m-d')])
-//            ->paginate(20);
-//    }
 
     if(@!is_null($key['search']) and @!is_null($key['date']) ){
         $data['info'] = SocialPosts::with('group','group.user','group.user.socialaccounts')
@@ -542,3 +492,4 @@ Route::get('/data',function (){
     return $data;
 });
 
+//  End History
