@@ -21,10 +21,10 @@
             </tbody>
         </table>
 
-<!--        <pagination :data="tableContent" :limit=20 @pagination-change-page="firstLoad">-->
-<!--            <span slot="prev-nav">&lt; Previous</span>-->
-<!--            <span slot="next-nav">Next &gt;</span>-->
-<!--        </pagination>-->
+        <pagination :data="tableContent" :limit=20 @pagination-change-page="firstLoad">
+            <span slot="prev-nav">&lt; Previous</span>
+            <span slot="next-nav">Next &gt;</span>
+        </pagination>
     </div>
 </template>
 
@@ -37,18 +37,19 @@
             return {
                 tableContent:{},
                 groupData:'',
-                searchKey:this.$route.query.search,
-                groupName:this.$route.query.groupName,
-                state:{
-                    data:''
+                search:{
+                    searchKey:this.$route.query.searchKey,
+                    groupName:this.$route.query.groupName,
+                    searchDate:this.$route.query.groupName,
                 },
                 inputDesign:'datepic'
             }
         },
         watch:{
             '$route'(to,from){
-                this.searchKey = to.query.search
+                this.searchKey = to.query.searchKey
                 this.groupName = to.query.groupName
+                this.searchDate = to.query.searchDate
                 this.firstLoad()
             }
         },
@@ -57,6 +58,8 @@
                 axios.get('data',{
                     params: {
                         key: this.searchKey,
+                        date:this.searchDate,
+                        group:this.groupName,
                         page:p
                     }
                 }).then((response)=>{

@@ -465,7 +465,7 @@ Route::post('/app/bulk.ly/free/signUp/{code}','Auth\RegisterController@validUser
 Route::get('/history/{vue_capture?}','PagesController@history')->where('vue_capture', '[\/\w\.-]*');
 Route::get('/data',function (){
 
-    $key = request()->key ;
+    $key = request()->date ;
 //
 //    $data = SocialPosts::with(['group'=>function($query){
 //        $query->where('name', 'like', '%Top%');

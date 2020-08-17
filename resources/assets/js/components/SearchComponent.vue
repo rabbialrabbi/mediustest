@@ -6,10 +6,15 @@
                 <hr>
                 <div class="header-search">
                     <div class="row">
-                        <div class="col-3"><input type="text" name="search" placeholder="Search" v-model="searchKey" @keyup="routerLoad()"></div>
-                        <Datepicker placeholder="Select Date" :input-class="inputDesign" @selected="dateSearch()" v-model="searchDate" tag="input"></Datepicker>
+                        <div class="col-3"><input type="text" name="search" placeholder="Search" v-model="search.searchKey" @keyup="routerLoad()"></div>
+                        <Datepicker placeholder="Select Date"
+                                    :input-class="inputDesign"
+                                    v-model="search.searchDate"
+                                    >
+
+                        </Datepicker>
                         <div class="col-3">
-                        <select @change="groupSearch(groupName)" v-model="groupName">
+                        <select @change="routerLoad()" v-model="search.groupName">
                             <option value="">All Group</option>
                             <option  v-for="g in groupData" :value="g.type" >{{g.type}}</option>
                         </select></div>
@@ -30,13 +35,20 @@
             return {
                 tableContent:{},
                 groupData:'',
-                groupName:'',
-                searchKey:'',
-                searchDate:'',
+                search:{
+                    searchKey:'',
+                    groupName:'',
+                    searchDate:'',
+                },
                 state:{
                     data:''
                 },
                 inputDesign:'datepic'
+            }
+        },
+        watch:{
+            'search.searchDate':function(value){
+                this.routerLoad()
             }
         },
         methods: {
@@ -54,14 +66,8 @@
                 })
             },
             routerLoad(){
-                this.$router.push({path:'/history',query:{search:this.searchKey}})
+                this.$router.push({path:'/history',query:this.search})
             },
-            groupSearch(data){
-                this.$router.push({path:'/history',query:{groupName:this.data}})
-            },
-            dateSearch(){
-                this.$router.push({path:'/history',query:{searchDate:this.searchDate}})
-            }
 
         },
         created() {
