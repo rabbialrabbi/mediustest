@@ -57,7 +57,7 @@
             firstLoad(p = 1){
                 axios.get('data',{
                     params: {
-                        key: this.searchKey,
+                        search: this.searchKey,
                         date:this.searchDate,
                         group:this.groupName,
                         page:p

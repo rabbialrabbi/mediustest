@@ -2,14 +2,15 @@
     <div class="col-md-12">
         <div class="panel panel-default group-posts header">
             <div>
-                <h2 class="header-top">Recent Post sent to buffer</h2>
+                <h1 class="header-top">Recent Post sent to buffer</h1>
                 <hr>
                 <div class="header-search">
                     <div class="row">
                         <div class="col-3"><input type="text" name="search" placeholder="Search" v-model="search.searchKey" @keyup="routerLoad()"></div>
                         <Datepicker placeholder="Select Date"
                                     :input-class="inputDesign"
-                                    v-model="search.searchDate"
+                                    @selected="search.searchDate = $event"
+                                    v-model="state"
                                     >
 
                         </Datepicker>
@@ -40,14 +41,19 @@
                     groupName:'',
                     searchDate:'',
                 },
-                state:{
-                    data:''
-                },
+                state:'',
                 inputDesign:'datepic'
             }
         },
         watch:{
-            'search.searchDate':function(value){
+            state:function(value){
+                let moment = value.toString()
+                let time = new Date(moment)
+                let year = time.getFullYear().toString()+'-'
+                let month = (time.getMonth()+1).toString()+'-'
+                let day = time.getDate()
+                this.search.searchDate = year.concat(month,day)
+
                 this.routerLoad()
             }
         },
@@ -84,8 +90,11 @@
     @import "./resources/assets/sass/bootstrap";
 .header{
     padding: 10px;
+
     &-top{
         color: black;
+        font-weight: bolder;
+        padding: 20px;
     }
     &-search{
         padding: 30px;
