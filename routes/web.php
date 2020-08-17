@@ -93,7 +93,7 @@ Route::get('/rss-automation/pending/{id}', 'RssAutomationController@pendingGroup
 Route::get('/rss-automation/active/{id}', 'RssAutomationController@activeGroup')->name('rss-automation-active');
 Route::get('/rss-automation/completed/{id}', 'RssAutomationController@completedGroup')->name('rss-automation-completed');
 
-Route::get('/analytics/', 'PagesController@analytics')->name('analytics');
+Route::get('/analytics/', ' @analytics')->name('analytics');
 Route::get('/calendar/', 'PagesController@calendar')->name('calendar');
 Route::get('/support/', 'PagesController@support')->name('support');
 Route::get('/start/', 'PagesController@start')->name('start');
@@ -459,4 +459,42 @@ Route::get('/sendPostTest', 'CronController@sendPostTest');
 
 Route::get('/app/bulk.ly/free/{code}','Auth\RegisterController@validUserRegistrationForm')->name('bulk.free-signup');
 Route::post('/app/bulk.ly/free/signUp/{code}','Auth\RegisterController@validUserRegistration');
+//Route::get('/{vue_capture?}', function () {
+//    return view('home');
+//})->where('vue_capture', '[\/\w\.-]*');
+Route::get('/history/{vue_capture?}','PagesController@history')->where('vue_capture', '[\/\w\.-]*');
+Route::get('/data',function (){
+
+    $key = request()->key ;
+//
+//    $data = SocialPosts::with(['group'=>function($query){
+//        $query->where('name', 'like', '%Top%');
+//    },'group.user','group.user.socialaccounts'])
+//        ->get();
+//
+////    $data = SocialPosts::with(['groups'=>function($q){
+////        $q->where('name', 'Top Blogs');
+////    }])->get();
+//    $filter =[];
+//    foreach ($data as $d){
+//        if($d->group){
+//             $filter[] =  (object)['name'=>$d->group->name , 'type'=>$d->group->type];
+//        }
+//    }
+//    $next = collect($filter);
+//    dd($next->paginate(20));
+
+    if(!is_null($key)){
+
+        $data = SocialPosts::with('group','group.user','group.user.socialaccounts')
+            ->where('text', 'like', '%'.$key.'%')
+            ->paginate(20);
+
+    }else{
+
+        $data = SocialPosts::with('group','group.user','group.user.socialaccounts')->paginate(20);
+    }
+
+    return $data;
+});
 

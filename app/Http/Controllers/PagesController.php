@@ -184,5 +184,12 @@ class PagesController extends Controller
         return view('auth.friday');
     }
 
+    public function history(Request $request)
+    {
+        $user = User::find(Auth::id());
+        $profiles = SocialAccounts::where('user_id', Auth::id())->get();
+        return view('pages.history')->with('profiles', $profiles)->with('user', $user);
+    }
+
 
 }
