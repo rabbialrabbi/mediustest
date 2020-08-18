@@ -21,6 +21,7 @@ use Bulkly\SocialAccounts;
 use Bulkly\RssAutoPost;
 use Bulkly\BufferPosting;
 use GuzzleHttp\Exception\ClientException;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 
 Route::get('/user/invoice/{invoice}', function (Request $request, $invoiceId) {
@@ -469,6 +470,55 @@ Route::get('/history/{vue_capture?}','PagesController@history')->where('vue_capt
 Route::get('/data',function (){
 
     $key= request()->input();
+<<<<<<< HEAD
+=======
+//    $key = request()->search ;
+//    $date = request()->date ;
+//    $group = request()->group ;
+////
+    function getFilterData($key){
+        $perPage = 20;
+        $data = SocialPosts::with(['group'=>function($query)use($key){
+            $query->where('type', '=', $key);
+        },'group.user','group.user.socialaccounts'])->get();
+
+         $posts = $data->filter(function ($q){
+            return $q->group ;
+        });
+
+        $posts = new LengthAwarePaginator(
+            $posts->slice((LengthAwarePaginator::resolveCurrentPage() *
+                    $perPage)-$perPage,
+                $perPage)->all(), count($posts),
+            $perPage, null, ['path' => '']);
+
+        return $posts;
+    }
+
+
+//    $filter =[];
+//    foreach ($data as $d){
+//        if($d->group){
+//             $filter[] =  (object)['name'=>$d->group->name , 'type'=>$d->group->type];
+//        }
+//    }
+
+//    $next = collect($filter);
+//    dd($next->paginate(20));
+//    if (!is_null($key['date'])){
+////
+//        $data['info'] = DB::table('social_posts')->whereRaw('date(created_at) = ?', [Carbon::parse($key['date'])->format('Y-m-d')])->get();
+//        dd($data);
+//    }
+//    or @!is_null($key['date']) or @!is_null($key['group'])
+//    if(@!is_null($key['date'])){
+//        $data['info']->whereRaw('date(created_at) = ?', [Carbon::parse($key['date'])->format('Y-m-d')])
+//            ->paginate(20);
+//    }else{
+//        $data['info']->whereRaw('date(created_at) = ?', [Carbon::parse($key['date'])->format('Y-m-d')])
+//            ->paginate(20);
+//    }
+>>>>>>> test
 
     if(@!is_null($key['search']) and @!is_null($key['date']) ){
         $data['info'] = SocialPosts::with('group','group.user','group.user.socialaccounts')
@@ -483,6 +533,8 @@ Route::get('/data',function (){
         $data['info'] = SocialPosts::with('group','group.user','group.user.socialaccounts')
             ->where('text', 'like', '%'.$key['search'].'%')
             ->paginate(20);
+    }elseif(@!is_null($key['group'])){
+        $data['info'] = getFilterData($key['group']);
     }else{
         $data['info'] = SocialPosts::with('group','group.user','group.user.socialaccounts')->paginate(20);
     }
