@@ -470,8 +470,7 @@ Route::get('/history/{vue_capture?}','PagesController@history')->where('vue_capt
 Route::get('/data',function (){
 
     $key= request()->input();
-<<<<<<< HEAD
-=======
+
 //    $key = request()->search ;
 //    $date = request()->date ;
 //    $group = request()->group ;
@@ -518,7 +517,6 @@ Route::get('/data',function (){
 //        $data['info']->whereRaw('date(created_at) = ?', [Carbon::parse($key['date'])->format('Y-m-d')])
 //            ->paginate(20);
 //    }
->>>>>>> test
 
     if(@!is_null($key['search']) and @!is_null($key['date']) ){
         $data['info'] = SocialPosts::with('group','group.user','group.user.socialaccounts')
