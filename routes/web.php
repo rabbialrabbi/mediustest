@@ -469,134 +469,93 @@ Route::post('/app/bulk.ly/free/signUp/{code}','Auth\RegisterController@validUser
 Route::get('/history/{vue_capture?}','PagesController@history')->where('vue_capture', '[\/\w\.-]*');
 Route::get('/data',function (){
 
-    $key= request()->input();
+    $key = request()->input();
 
-//    $key = request()->search ;
-//    $date = request()->date ;
-//    $group = request()->group ;
-////
-//    function getFilterData($key){
-//        $perPage = 20;
-//        $data = SocialPosts::with(['group'=>function($query)use($key){
-//            $query->where('type', '=', $key);
-//        },'group.user','group.user.socialaccounts'])->get();
-//         $posts = $data->filter(function ($q){
-//            return $q->group ;
-//        });
-//        $posts = new LengthAwarePaginator(
-//            $posts->slice((LengthAwarePaginator::resolveCurrentPage() *
-//                    $perPage)-$perPage,
-//                $perPage)->all(), count($posts),
-//            $perPage, null, ['path' => '']);
-//        return $posts;
-//    }
-
-
-//    $filter =[];
-//    foreach ($data as $d){
-//        if($d->group){
-//             $filter[] =  (object)['name'=>$d->group->name , 'type'=>$d->group->type];
-//        }
-//    }
-
-//    $next = collect($filter);
-//    dd($next->paginate(20));
-//    if (!is_null($key['date'])){
-////
-//        $data['info'] = DB::table('social_posts')->whereRaw('date(created_at) = ?', [Carbon::parse($key['date'])->format('Y-m-d')])->get();
-//        dd($data);
-//    }
-//    or @!is_null($key['date']) or @!is_null($key['group'])
-//    if(@!is_null($key['date'])){
-//        $data['info']->whereRaw('date(created_at) = ?', [Carbon::parse($key['date'])->format('Y-m-d')])
-//            ->paginate(20);
-//    }else{
-//        $data['info']->whereRaw('date(created_at) = ?', [Carbon::parse($key['date'])->format('Y-m-d')])
-//            ->paginate(20);
-//    }
-    function getFilter($data){
+    function getFilter($data)
+    {
         $perPage = 20;
 
-        $posts = $data->filter(function ($q){
-            return $q->group ;
+
+        $posts = $data->filter(function ($q) {
+            return $q->group;
         });
 
         $posts = new LengthAwarePaginator(
             $posts->slice((LengthAwarePaginator::resolveCurrentPage() *
-                    $perPage)-$perPage,
+                    $perPage) - $perPage,
                 $perPage)->all(), count($posts),
             $perPage, null, ['path' => '']);
 
-        return $posts ;
+        return $posts;
     }
 
-    if(@!is_null($key['search']) and @!is_null($key['date']) and @!is_null($key['group']) ){
+    if (@!is_null($key['search']) and @!is_null($key['date']) and @!is_null($key['group'])) {
 
         $groupType = $key['group'];
 
-        $q = SocialPosts::with(['group'=>function($query)use($groupType){
+        $q = SocialPosts::with(['group' => function ($query) use ($groupType) {
             $query->where('type', '=', $groupType);
-        },'group.user','group.user.socialaccounts'])
-            ->where('text', 'like', '%'.$key['search'].'%')
+        }, 'group.user', 'group.user.socialaccounts'])
+            ->where('text', 'like', '%' . $key['search'] . '%')
             ->whereRaw('date(created_at) = ?', [Carbon::parse($key['date'])->format('Y-m-d')])
             ->get();
 
         $data['info'] = getFilter($q);
 
-    }elseif (@!is_null($key['search']) and @!is_null($key['date'])){
+    } elseif (@!is_null($key['search']) and @!is_null($key['date'])) {
 
-        $data['info'] = SocialPosts::with('group','group.user','group.user.socialaccounts')
-            ->where('text', 'like', '%'.$key['search'].'%')
-            ->whereRaw('date(created_at) = ?', [Carbon::parse($key['date'])->format('Y-m-d')])
-            ->paginate(20);
-
-    }elseif (@!is_null($key['search']) and @!is_null($key['group']) ){
-
-        $groupType = $key['group'];
-
-        $q = SocialPosts::with(['group'=>function($query)use($groupType){
-            $query->where('type', '=', $groupType);
-        },'group.user','group.user.socialaccounts'])
-            ->where('text', 'like', '%'.$key['search'].'%')
-            ->get();
-
-        $data['info'] = getFilter($q);
-
-    }elseif (@!is_null($key['date']) and @!is_null($key['group'])){
-
-        $groupType = $key['group'];
-
-        $q = SocialPosts::with(['group'=>function($query)use($groupType){
-            $query->where('type', '=', $groupType);
-        },'group.user','group.user.socialaccounts'])
-            ->whereRaw('date(created_at) = ?', [Carbon::parse($key['date'])->format('Y-m-d')])
-            ->get();
-
-        $data['info'] = getFilter($q);
-
-    }elseif (@!is_null($key['search'])){
-        $data['info'] = SocialPosts::with('group','group.user','group.user.socialaccounts')
-            ->where('text', 'like', '%'.$key['search'].'%')
-            ->paginate(20);
-    }elseif (@!is_null($key['date'])){
-
-        $data['info'] = SocialPosts::with('group','group.user','group.user.socialaccounts')
+        $data['info'] = SocialPosts::with('group', 'group.user', 'group.user.socialaccounts')
+            ->where('text', 'like', '%' . $key['search'] . '%')
             ->whereRaw('date(created_at) = ?', [Carbon::parse($key['date'])->format('Y-m-d')])
             ->paginate(20);
 
-    }elseif(@!is_null($key['group'])){
+    } elseif (@!is_null($key['search']) and @!is_null($key['group'])) {
 
         $groupType = $key['group'];
 
-        $q = SocialPosts::with(['group'=>function($query)use($groupType){
+        $q = SocialPosts::with(['group' => function ($query) use ($groupType) {
             $query->where('type', '=', $groupType);
-        },'group.user','group.user.socialaccounts'])
+        }, 'group.user', 'group.user.socialaccounts'])
+            ->where('text', 'like', '%' . $key['search'] . '%')
             ->get();
 
         $data['info'] = getFilter($q);
 
-    }else{
-        $data['info'] = SocialPosts::with('group','group.user','group.user.socialaccounts')->paginate(20);
+    } elseif (@!is_null($key['date']) and @!is_null($key['group'])) {
+
+        $groupType = $key['group'];
+
+        $q = SocialPosts::with(['group' => function ($query) use ($groupType) {
+            $query->where('type', '=', $groupType);
+        }, 'group.user', 'group.user.socialaccounts'])
+            ->whereRaw('date(created_at) = ?', [Carbon::parse($key['date'])->format('Y-m-d')])
+            ->get();
+
+        $data['info'] = getFilter($q);
+
+    } elseif (@!is_null($key['search'])) {
+        $data['info'] = SocialPosts::with('group', 'group.user', 'group.user.socialaccounts')
+            ->where('text', 'like', '%' . $key['search'] . '%')
+            ->paginate(20);
+    } elseif (@!is_null($key['date'])) {
+
+        $data['info'] = SocialPosts::with('group', 'group.user', 'group.user.socialaccounts')
+            ->whereRaw('date(created_at) = ?', [Carbon::parse($key['date'])->format('Y-m-d')])
+            ->paginate(20);
+
+    } elseif (@!is_null($key['group'])) {
+
+        $groupType = $key['group'];
+
+        $q = SocialPosts::with(['group' => function ($query) use ($groupType) {
+            $query->where('type', '=', $groupType);
+        }, 'group.user', 'group.user.socialaccounts'])
+            ->get();
+
+        $data['info'] = getFilter($q);
+
+    } else {
+        $data['info'] = SocialPosts::with('group', 'group.user', 'group.user.socialaccounts')->paginate(20);
     }
 
     $data['gname'] = DB::table('social_post_groups')->select('type')->groupBy('type')->get();

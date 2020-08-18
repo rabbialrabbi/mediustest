@@ -3,20 +3,20 @@
         <table class="table table-bordered" >
             <thead>
             <tr style="background-color: #dee2e6">
-                <th>Group Name</th>
-                <th>Group Type</th>
-                <th>Account Name</th>
-                <th>Post Test</th>
-                <th>Time</th>
+                <th style="width: 20%" >Group Name</th>
+                <th style="width: 10%" class="text-center">Group Type</th>
+                <th style="width: 10%" class="text-center">Account Name</th>
+                <th style="width: 40%">Post Test</th>
+                <th style="width: 20%" class="text-center">Time</th>
             </tr>
             </thead>
             <tbody>
             <tr v-for="content in tableContent.data">
-                <td >{{content.group.name}}</td>
-                <td >{{content.group.type}}</td>
-                <td class="text-center"><img :src="content.group.user.socialaccounts[0].avatar" :alt="content.group.name" height="40px" width="40px" style="border-radius: 50%"></td>
-                <td style="width: 400px">{{content.text}}</td>
-                <td>{{content.created_at}}</td>
+                <td style="width: 20%" >{{content.group.name}}</td>
+                <td style="width: 10%" class="text-center">{{content.group.type}}</td>
+                <td style="width: 10%" class="text-center"><img :src="content.group.user.socialaccounts[0].avatar" :alt="content.group.name" height="40px" width="40px" style="border-radius: 50%"></td>
+                <td style="width: 40%">{{content.text}}</td>
+                <td style="width: 20%" class="text-center">{{content.created_at}}</td>
             </tr>
             </tbody>
         </table>
@@ -83,28 +83,11 @@
 
 <style lang="scss" scoped>
     @import "./resources/assets/sass/bootstrap";
-    .header{
-        padding: 10px;
-        &-top{
-            color: black;
-        }
-        &-search{
-            padding: 30px;
-            input,select{
-                width: 250px;
-                border: none;
-                border-bottom: 1px solid darkgray;
-                padding: 10px;
-                outline: none;
-            }
-            input:hover{
-                outline: none;
-            }
-        }
-        select{
-            transform: translateY(10%);
-            margin-left: 60px;
-        }
+    tr td,th {
+        color: #6F6F6F;
 
+    }
+    tr td:first-child {
+        font-weight: bolder;
     }
 </style>
