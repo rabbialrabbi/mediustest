@@ -21,6 +21,7 @@ use Bulkly\SocialAccounts;
 use Bulkly\RssAutoPost;
 use Bulkly\BufferPosting;
 use GuzzleHttp\Exception\ClientException;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 
 Route::get('/user/invoice/{invoice}', function (Request $request, $invoiceId) {
@@ -486,15 +487,24 @@ Route::get('/data',function (){
 //    $date = request()->date ;
 //    $group = request()->group ;
 ////
-//    function getFilterData($key){
-//        $data = SocialPosts::with(['group'=>function($query)use($key){
-//            $query->where('type', '=', $key);
-//        },'group.user'])->get()
-//            ->filter(function ($data){
-//            return $data->group;
-//        })->pagination(20);
-//        return $data;
-//    }
+    function getFilterData($key){
+        $perPage = 20;
+        $data = SocialPosts::with(['group'=>function($query)use($key){
+            $query->where('type', '=', $key);
+        },'group.user','group.user.socialaccounts'])->get();
+
+         $posts = $data->filter(function ($q){
+            return $q->group ;
+        });
+
+        $posts = new LengthAwarePaginator(
+            $posts->slice((LengthAwarePaginator::resolveCurrentPage() *
+                    $perPage)-$perPage,
+                $perPage)->all(), count($posts),
+            $perPage, null, ['path' => '']);
+
+        return $posts;
+    }
 
 
 //    $filter =[];
@@ -533,6 +543,8 @@ Route::get('/data',function (){
         $data['info'] = SocialPosts::with('group','group.user','group.user.socialaccounts')
             ->where('text', 'like', '%'.$key['search'].'%')
             ->paginate(20);
+    }elseif(@!is_null($key['group'])){
+        $data['info'] = getFilterData($key['group']);
     }else{
         $data['info'] = SocialPosts::with('group','group.user','group.user.socialaccounts')->paginate(20);
     }
